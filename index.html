@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robin Dubosq — Workflow Recrutement</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --noir: #0f0f0f;
+    --blanc: #f7f5f0;
+    --accent: #c8ff00;
+    --gris: #2a2a2a;
+    --gris-clair: #3d3d3d;
+    --texte-muted: #888;
+    --border: #2a2a2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--noir);
+    color: var(--blanc);
+    font-family: 'Manrope', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(15,15,15,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 13px; color: var(--texte-muted); text-decoration: none;
+    letter-spacing: 0.04em; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--blanc); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 80% 40%, #1a2a00 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .hero-tag::before {
+    content: ''; display: block;
+    width: 24px; height: 1px; background: var(--accent);
+  }
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+  }
+  .hero-title em {
+    font-style: italic; color: var(--accent);
+  }
+  .hero-meta {
+    display: flex; align-items: center; gap: 3rem;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    display: flex; flex-direction: column;
+  }
+  .hero-stat .num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem; color: var(--accent); line-height: 1;
+  }
+  .hero-stat .label {
+    font-size: 12px; color: var(--texte-muted);
+    letter-spacing: 0.04em; margin-top: 0.2rem;
+  }
+  .hero-divider { width: 1px; height: 48px; background: var(--border); }
+  .hero-links { display: flex; gap: 1rem; margin-top: 0.5rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    font-size: 13px; font-family: 'DM Mono', monospace;
+    text-decoration: none; border-radius: 2px;
+    transition: all 0.2s; cursor: pointer; border: none;
+  }
+  .btn-primary {
+    background: var(--accent); color: var(--noir); font-weight: 500;
+  }
+  .btn-primary:hover { background: #d4ff1a; }
+  .btn-ghost {
+    background: transparent; color: var(--blanc);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--blanc); }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; border-bottom: 1px solid var(--border); }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 24px; height: 1px; background: var(--accent);
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1; margin-bottom: 3rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* PIPELINE */
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0;
+    margin-bottom: 4rem;
+  }
+  .pipeline-step {
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--border);
+    border-right: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    background: var(--noir);
+  }
+  .pipeline-step:last-child { border-right: 1px solid var(--border); }
+  .pipeline-step:hover, .pipeline-step.active {
+    background: var(--gris);
+    border-color: var(--accent);
+    z-index: 2;
+  }
+  .pipeline-step.active .step-num { color: var(--accent); }
+  .step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--texte-muted);
+    margin-bottom: 1rem;
+    transition: color 0.25s;
+  }
+  .step-name {
+    font-size: 13px; font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .step-sla {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--texte-muted);
+  }
+  .step-arrow {
+    position: absolute; right: -10px; top: 50%;
+    transform: translateY(-50%);
+    width: 18px; height: 18px;
+    background: var(--noir);
+    border: 1px solid var(--border);
+    border-left: none; border-bottom: none;
+    transform: translateY(-50%) rotate(45deg);
+    z-index: 3;
+  }
+
+  /* DETAIL PANEL */
+  .detail-panel {
+    border: 1px solid var(--accent);
+    padding: 2.5rem;
+    background: var(--gris);
+    min-height: 220px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s;
+  }
+  .detail-panel.visible {
+    opacity: 1; transform: translateY(0);
+  }
+  .detail-panel h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem; margin-bottom: 1rem;
+  }
+  .detail-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem; margin-top: 1.5rem;
+  }
+  .detail-item .di-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .detail-item .di-val {
+    font-size: 13px; color: var(--blanc);
+  }
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    background: rgba(200,255,0,0.1);
+    border: 1px solid rgba(200,255,0,0.3);
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; border-radius: 2px;
+    margin: 0.2rem 0.2rem 0.2rem 0;
+  }
+
+  /* SCORECARD */
+  .scorecard-blocs {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+  .bloc {
+    background: var(--noir);
+    padding: 2rem 1.5rem;
+    cursor: pointer; transition: background 0.2s;
+    position: relative;
+  }
+  .bloc:hover, .bloc.active { background: var(--gris); }
+  .bloc-letter {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem; color: var(--border);
+    line-height: 1; margin-bottom: 0.8rem;
+    transition: color 0.2s;
+  }
+  .bloc.active .bloc-letter { color: var(--accent); }
+  .bloc-name { font-size: 13px; font-weight: 600; margin-bottom: 0.4rem; }
+  .bloc-weight {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--texte-muted);
+  }
+  .weight-bar {
+    position: absolute; bottom: 0; left: 0;
+    height: 3px; background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .decision-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+  .decision-cell {
+    background: var(--noir); padding: 1.5rem;
+  }
+  .decision-cell .score {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px; color: var(--texte-muted); margin-bottom: 0.5rem;
+  }
+  .decision-cell .verdict {
+    font-size: 13px; font-weight: 600;
+  }
+  .v-green { color: #6dff6d; }
+  .v-yellow { color: #ffd700; }
+  .v-orange { color: #ff9a3c; }
+  .v-red { color: #ff5c5c; }
+
+  /* OUTILS */
+  .outils-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+  }
+  .outil-card {
+    background: var(--noir); padding: 2.5rem 2rem;
+    transition: background 0.2s; cursor: default;
+  }
+  .outil-card:hover { background: var(--gris); }
+  .outil-icon {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .outil-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem; margin-bottom: 0.8rem;
+  }
+  .outil-desc { font-size: 13px; color: var(--texte-muted); line-height: 1.6; }
+
+  /* CHIFFRES */
+  .chiffres-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+  .chiffre-cell {
+    background: var(--noir); padding: 2.5rem 2rem;
+  }
+  .chiffre-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3rem; color: var(--accent); line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .chiffre-label { font-size: 13px; color: var(--texte-muted); }
+  .chiffre-source {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--gris-clair);
+    margin-top: 0.3rem;
+  }
+
+  /* COMMUNICATION */
+  .comm-tabs {
+    display: flex; gap: 0; margin-bottom: 0;
+    border: 1px solid var(--border); border-bottom: none;
+    overflow-x: auto;
+  }
+  .comm-tab {
+    padding: 0.8rem 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--texte-muted);
+    cursor: pointer; border-right: 1px solid var(--border);
+    white-space: nowrap; transition: all 0.2s;
+    background: var(--noir);
+  }
+  .comm-tab:hover { color: var(--blanc); background: var(--gris); }
+  .comm-tab.active {
+    color: var(--accent); background: var(--gris);
+    border-bottom: 2px solid var(--accent);
+  }
+  .comm-panel {
+    border: 1px solid var(--border); padding: 2.5rem;
+    background: var(--gris); display: none;
+  }
+  .comm-panel.active { display: block; }
+  .comm-panel pre {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; line-height: 1.8;
+    color: #ccc; white-space: pre-wrap;
+    background: var(--noir); padding: 1.5rem;
+    border-left: 2px solid var(--accent);
+    margin-top: 1rem;
+  }
+  .comm-meta {
+    font-size: 12px; color: var(--texte-muted);
+    margin-bottom: 0.5rem;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-left {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px; color: var(--texte-muted);
+  }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a {
+    font-size: 12px; color: var(--texte-muted);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .hero { padding: 0 1.5rem 4rem; }
+    section { padding: 4rem 1.5rem; }
+    .pipeline { grid-template-columns: repeat(2, 1fr); }
+    .pipeline-step:nth-child(2) { border-right: 1px solid var(--border); }
+    .pipeline-step { border-right: 1px solid var(--border) !important; }
+    .step-arrow { display: none; }
+    .scorecard-blocs, .decision-grid, .chiffres-grid { grid-template-columns: repeat(2, 1fr); }
+    .outils-grid { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; gap: 1rem; }
+    footer { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">RD — Workflow</div>
+  <div class="nav-links">
+    <a href="#pipeline">Pipeline</a>
+    <a href="#scorecard">Scorecard</a>
+    <a href="#outils">Outils</a>
+    <a href="#communication">Communication</a>
+    <a href="#chiffres">Résultats</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tag">Chargé de recrutement · 360°</div>
+  <h1 class="hero-title">Robin<br><em>Dubosq</em></h1>
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <span class="num">+150</span>
+      <span class="label">Recrutements · Page Group</span>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <span class="num">240k€</span>
+      <span class="label">Marge générée · 12 mois</span>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <span class="num">−20%</span>
+      <span class="label">Coûts RAC · Fnac Darty</span>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-links">
+      <a href="https://www.linkedin.com/in/robin-dubosq" class="btn btn-primary" target="_blank">LinkedIn →</a>
+      <a href="mailto:robin.dubosq@outlook.fr" class="btn btn-ghost">Contact</a>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section id="pipeline">
+  <div class="section-label">01 — Process</div>
+  <h2>Pipeline de recrutement</h2>
+
+  <div class="pipeline">
+    <div class="pipeline-step active" onclick="showStep(0)" data-step="0">
+      <div class="step-num">01</div>
+      <div class="step-name">Sourcing</div>
+      <div class="step-sla">J+0 → J+2</div>
+      <div class="step-arrow"></div>
+    </div>
+    <div class="pipeline-step" onclick="showStep(1)" data-step="1">
+      <div class="step-num">02</div>
+      <div class="step-name">Qualification</div>
+      <div class="step-sla">J+2 → J+3</div>
+      <div class="step-arrow"></div>
+    </div>
+    <div class="pipeline-step" onclick="showStep(2)" data-step="2">
+      <div class="step-num">03</div>
+      <div class="step-name">Entretien RH</div>
+      <div class="step-sla">J+3 → J+5</div>
+      <div class="step-arrow"></div>
+    </div>
+    <div class="pipeline-step" onclick="showStep(3)" data-step="3">
+      <div class="step-num">04</div>
+      <div class="step-name">Entretien Manager</div>
+      <div class="step-sla">J+5 → J+10</div>
+      <div class="step-arrow"></div>
+    </div>
+    <div class="pipeline-step" onclick="showStep(4)" data-step="4">
+      <div class="step-num">05</div>
+      <div class="step-name">Tests & PAPI</div>
+      <div class="step-sla">J+10 → J+12</div>
+      <div class="step-arrow"></div>
+    </div>
+    <div class="pipeline-step" onclick="showStep(5)" data-step="5">
+      <div class="step-num">06</div>
+      <div class="step-name">Offre & Onboarding</div>
+      <div class="step-sla">≤ J+15</div>
+    </div>
+  </div>
+
+  <div class="detail-panel visible" id="step-detail">
+    <div id="step-content"></div>
+  </div>
+</section>
+
+<!-- SCORECARD -->
+<section id="scorecard">
+  <div class="section-label">02 — Évaluation</div>
+  <h2>Scorecard anti-biais</h2>
+  <p style="color:var(--texte-muted); margin-bottom: 2.5rem; max-width: 600px;">
+    Méthodologie développée chez Fnac Darty. 17 critères, 4 blocs pondérés, décision automatique sur score. Objectif : zéro décision au feeling.
+  </p>
+
+  <div class="scorecard-blocs">
+    <div class="bloc active" onclick="showBloc('A')" id="bloc-A">
+      <div class="bloc-letter">A</div>
+      <div class="bloc-name">Compétences techniques</div>
+      <div class="bloc-weight">35% du score global</div>
+      <div class="weight-bar" style="width: 35%"></div>
+    </div>
+    <div class="bloc" onclick="showBloc('B')" id="bloc-B">
+      <div class="bloc-letter">B</div>
+      <div class="bloc-name">Soft Skills</div>
+      <div class="bloc-weight">25% du score global</div>
+      <div class="weight-bar" style="width: 25%"></div>
+    </div>
+    <div class="bloc" onclick="showBloc('C')" id="bloc-C">
+      <div class="bloc-letter">C</div>
+      <div class="bloc-name">Culture & Valeurs</div>
+      <div class="bloc-weight">20% du score global</div>
+      <div class="weight-bar" style="width: 20%"></div>
+    </div>
+    <div class="bloc" onclick="showBloc('D')" id="bloc-D">
+      <div class="bloc-letter">D</div>
+      <div class="bloc-name">Motivation & Projet</div>
+      <div class="bloc-weight">20% du score global</div>
+      <div class="weight-bar" style="width: 20%"></div>
+    </div>
+  </div>
+
+  <div class="detail-panel visible" id="bloc-detail" style="margin-bottom: 3rem;">
+    <div id="bloc-content"></div>
+  </div>
+
+  <div class="section-label" style="margin-bottom: 1.5rem;">Grille de décision automatique</div>
+  <div class="decision-grid">
+    <div class="decision-cell">
+      <div class="score">Score ≥ 3,5 / 4</div>
+      <div class="verdict v-green">✓ Validation forte</div>
+      <div style="font-size:12px; color:var(--texte-muted); margin-top:0.4rem;">Avancer sans panel</div>
+    </div>
+    <div class="decision-cell">
+      <div class="score">Score 3,0 – 3,4</div>
+      <div class="verdict v-yellow">◐ Validation conditionnelle</div>
+      <div style="font-size:12px; color:var(--texte-muted); margin-top:0.4rem;">Panel requis</div>
+    </div>
+    <div class="decision-cell">
+      <div class="score">Score 2,5 – 2,9</div>
+      <div class="verdict v-orange">⚠ Réserves</div>
+      <div style="font-size:12px; color:var(--texte-muted); margin-top:0.4rem;">Arbitrage collégial</div>
+    </div>
+    <div class="decision-cell">
+      <div class="score">Score &lt; 2,5</div>
+      <div class="verdict v-red">✗ Non-sélection</div>
+      <div style="font-size:12px; color:var(--texte-muted); margin-top:0.4rem;">Motif obligatoire</div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTILS -->
+<section id="outils">
+  <div class="section-label">03 — Stack</div>
+  <h2>Outils & intégrations</h2>
+  <div class="outils-grid">
+    <div class="outil-card">
+      <div class="outil-icon">Sourcing</div>
+      <div class="outil-name">LinkedIn Recruiter</div>
+      <div class="outil-desc">Requêtes booléennes avancées, filtres séniorité / secteur / disponibilité. Approche directe personnalisée — taux de réponse optimisé par personnalisation systématique.</div>
+    </div>
+    <div class="outil-card">
+      <div class="outil-icon">ATS</div>
+      <div class="outil-name">Talentsoft + ATS Excel</div>
+      <div class="outil-desc">Talentsoft en production, ATS Excel propriétaire (V12) en parallèle : dashboard KPIs, pipeline 6 étapes, 21 champs candidats, reporting hebdo automatisé.</div>
+    </div>
+    <div class="outil-card">
+      <div class="outil-icon">CRM</div>
+      <div class="outil-name">Salesforce</div>
+      <div class="outil-desc">Gestion des comptes clients et suivi des missions cabinet (Page Group). Coordination avec les managers opérationnels et C-level.</div>
+    </div>
+    <div class="outil-card">
+      <div class="outil-icon">Évaluation</div>
+      <div class="outil-name">Scorecard Excel (VBA)</div>
+      <div class="outil-desc">Grille 17 critères, calculs automatiques, alertes éliminatoires, onglet comparatif multi-candidats. Développée pour Fnac Darty, adaptable à tout poste.</div>
+    </div>
+    <div class="outil-card">
+      <div class="outil-icon">Documentation</div>
+      <div class="outil-name">Notion</div>
+      <div class="outil-desc">Base de connaissance recrutement : mode opératoire, templates communication, suivi candidats, calculateur rémunération. Process documenté, reproductible.</div>
+    </div>
+    <div class="outil-card">
+      <div class="outil-icon">Marque Employeur</div>
+      <div class="outil-name">Présence terrain</div>
+      <div class="outil-desc">Salons, job dating, interventions écoles, événements corporate. Audit transparence rémunération mené chez Fnac Darty (annonces groupe).</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMUNICATION -->
+<section id="communication">
+  <div class="section-label">04 — Templates</div>
+  <h2>Communication candidats</h2>
+  <p style="color:var(--texte-muted); margin-bottom: 2.5rem; max-width: 600px;">
+    8 templates couvrant l'intégralité du cycle. Issus des process Fnac Darty. Cliquer sur un onglet pour voir le template.
+  </p>
+
+  <div class="comm-tabs">
+    <div class="comm-tab active" onclick="showComm(0)">Approche directe</div>
+    <div class="comm-tab" onclick="showComm(1)">Invitation RH</div>
+    <div class="comm-tab" onclick="showComm(2)">Invitation Manager</div>
+    <div class="comm-tab" onclick="showComm(3)">Offre verbale</div>
+    <div class="comm-tab" onclick="showComm(4)">Relance</div>
+    <div class="comm-tab" onclick="showComm(5)">Refus post-candidature</div>
+    <div class="comm-tab" onclick="showComm(6)">Refus post-entretien</div>
+  </div>
+
+  <div class="comm-panel active" id="comm-0">
+    <div class="comm-meta">Canal : LinkedIn InMail · Déclencheur : Premier contact profil passif · Règle : max 6 lignes, personnalisation obligatoire</div>
+    <pre>Objet : Opportunité [Intitulé] — [Entreprise] — [Ville]
+
+Bonjour [Prénom],
+
+Votre parcours en [domaine] m'a attiré l'attention, notamment votre
+expérience chez [Entreprise] sur [compétence clé repérée].
+
+Je recrute un(e) [Intitulé] pour [Entreprise] à [Ville].
+Le poste couvre [2-3 missions clés en une phrase].
+
+Cela correspond-il à ce que vous recherchez, ou connaissez-vous
+quelqu'un qui pourrait être intéressé ?
+
+Robin — [Titre] | [Entreprise]</pre>
+  </div>
+  <div class="comm-panel" id="comm-1">
+    <div class="comm-meta">Canal : Email · Déclencheur : Profil validé en pré-qualification téléphonique</div>
+    <pre>Objet : Entretien RH — [Intitulé] — [Entreprise] — [Date]
+
+Bonjour [Prénom],
+
+Suite à notre échange, je serais ravi(e) de vous rencontrer dans le
+cadre du recrutement pour le poste de [Intitulé] au sein de [Entreprise].
+
+Date : [Jour] [Date] à [Heure]
+Format : [Présentiel – adresse / Visio – lien]
+Durée estimée : [45 min / 1h]
+
+Merci de confirmer votre disponibilité en répondant à ce message.
+
+Robin — [Titre] | [Entreprise] | [Téléphone]</pre>
+  </div>
+  <div class="comm-panel" id="comm-2">
+    <div class="comm-meta">Canal : Email · Déclencheur : Score scorecard ≥ 3,0 — transmission validée au N+1</div>
+    <pre>Objet : Entretien Manager — [Intitulé] — [Entreprise] — [Date]
+
+Bonjour [Prénom],
+
+Votre candidature a retenu notre attention à l'issue de l'entretien RH.
+Je vous propose de rencontrer [Prénom Manager], [Titre], dans le cadre
+de la suite du process pour le poste de [Intitulé].
+
+Date : [Jour] [Date] à [Heure]
+Lieu : [Adresse / Lien visio]
+Durée estimée : [1h / 1h30]
+
+N'hésitez pas à préparer [consigne éventuelle].
+
+Robin — [Titre] | [Entreprise]</pre>
+  </div>
+  <div class="comm-panel" id="comm-3">
+    <div class="comm-meta">Canal : Email (après appel téléphonique) · Déclencheur : Décision finale positive</div>
+    <pre>Objet : Décision — [Intitulé] — [Entreprise]
+
+Bonjour [Prénom],
+
+J'ai le plaisir de vous informer que votre candidature au poste de
+[Intitulé] a été retenue.
+
+Poste : [Intitulé] | [Localisation]
+Contrat : [CDI / CDD / Alternance]
+Rémunération : [Montant brut annuel]
+Prise de poste : [Date]
+
+Merci de me confirmer votre accord d'ici [délai].
+
+Robin — [Titre] | [Entreprise]</pre>
+  </div>
+  <div class="comm-panel" id="comm-4">
+    <div class="comm-meta">Canal : Email ou LinkedIn · Déclencheur : Pas de réponse à J+7</div>
+    <pre>Bonjour [Prénom],
+
+Je me permets de revenir vers vous suite à mon message / invitation
+du [Date]. Le poste [Intitulé] chez [Entreprise] est toujours ouvert.
+
+Sans retour de votre part d'ici [Date], je proposerai ce créneau
+à un autre candidat.
+
+Robin</pre>
+  </div>
+  <div class="comm-panel" id="comm-5">
+    <div class="comm-meta">Canal : Email · Délai : sous 5 jours ouvrables après réception du profil</div>
+    <pre>Objet : Votre candidature — [Intitulé] — [Entreprise]
+
+Bonjour [Prénom],
+
+Merci pour l'intérêt porté à [Entreprise] et le temps consacré
+à votre candidature pour le poste de [Intitulé].
+
+Après examen attentif, nous ne sommes pas en mesure de donner
+une suite favorable à ce stade.
+
+Nous conservons votre profil et n'hésiterons pas à vous recontacter
+si une opportunité correspondant à votre parcours se présente.
+
+Robin — [Titre] | [Entreprise]</pre>
+  </div>
+  <div class="comm-panel" id="comm-6">
+    <div class="comm-meta">Canal : Email après appel obligatoire · Règle absolue : appeler avant d'envoyer. Un refus uniquement écrit après 2+ étapes détruit la marque employeur.</div>
+    <pre>Objet : Suite de votre candidature — [Intitulé] — [Entreprise]
+
+Bonjour [Prénom],
+
+Comme convenu lors de notre échange, je vous confirme par écrit
+la décision concernant votre candidature au poste de [Intitulé].
+
+Malgré la qualité de nos échanges et vos compétences en [domaine],
+nous avons retenu un profil plus en adéquation avec nos besoins actuels.
+
+[Feedback constructif 1-2 lignes sur les points forts]
+
+Je vous souhaite une belle suite dans votre recherche.
+
+Robin — [Titre] | [Entreprise] | [Téléphone]</pre>
+  </div>
+</section>
+
+<!-- CHIFFRES -->
+<section id="chiffres">
+  <div class="section-label">05 — Résultats</div>
+  <h2>Réalisations clés</h2>
+  <div class="chiffres-grid">
+    <div class="chiffre-cell">
+      <div class="chiffre-num">+150</div>
+      <div class="chiffre-label">Recrutements réalisés</div>
+      <div class="chiffre-source">Page Group · 2023–2025</div>
+    </div>
+    <div class="chiffre-cell">
+      <div class="chiffre-num">240k€</div>
+      <div class="chiffre-label">Marge générée sur 12 mois</div>
+      <div class="chiffre-source">Page Group · ETI / Grands groupes</div>
+    </div>
+    <div class="chiffre-cell">
+      <div class="chiffre-num">−20%</div>
+      <div class="chiffre-label">Réduction des coûts RAC</div>
+      <div class="chiffre-source">Fnac Darty · 2025</div>
+    </div>
+    <div class="chiffre-cell">
+      <div class="chiffre-num">12 mois</div>
+      <div class="chiffre-label">Promotion consultant senior</div>
+      <div class="chiffre-source">Page Group · record interne</div>
+    </div>
+  </div>
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+    <span class="tag">Hermès</span>
+    <span class="tag">Pomona</span>
+    <span class="tag">CEVA Logistics</span>
+    <span class="tag">Fnac Darty</span>
+    <span class="tag">ETI Île-de-France</span>
+    <span class="tag">Achats & Supply Chain</span>
+    <span class="tag">Commerce / Marketing / Finance</span>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-left">© 2026 Robin Dubosq · robin.dubosq@outlook.fr · 07 69 94 65 46</div>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/robin-dubosq" target="_blank">LinkedIn</a>
+    <a href="https://github.com/raponsel974-sketch/Workflow-Robin-DUBOSQ" target="_blank">GitHub</a>
+    <a href="mailto:robin.dubosq@outlook.fr">Email</a>
+  </div>
+</footer>
+
+<script>
+const steps = [
+  {
+    title: "01 — Sourcing & Approche directe",
+    desc: "Identification des profils via LinkedIn Recruiter, Talentsoft, cooptation et approche directe. Requêtes booléennes personnalisées par secteur. Délai cible : J+2 après ouverture du poste.",
+    outils: "LinkedIn Recruiter · Talentsoft · Hellowork",
+    actions: "Requête booléenne · InMail personnalisé · Qualification téléphonique 15min",
+    livrable: "Liste de profils pré-qualifiés + notes qualification"
+  },
+  {
+    title: "02 — Qualification téléphonique",
+    desc: "Premier filtre : adéquation mission / profil, disponibilité, prétentions salariales, motivation. Durée 15–20 min. Saisie dans l'ATS immédiatement après l'appel.",
+    outils: "ATS Excel V12 · Notion (CRE template)",
+    actions: "Appel qualification · Saisie ATS · Décision GO / NO GO",
+    livrable: "Fiche candidat renseignée dans l'ATS"
+  },
+  {
+    title: "03 — Entretien RH",
+    desc: "Entretien structuré 45–60 min. Évaluation blocs B (Soft Skills) et D (Motivation) de la scorecard. Vérification des critères éliminatoires. Compte-rendu transmis au manager sous 2h.",
+    outils: "Scorecard Excel · Template CRE Notion",
+    actions: "Entretien structuré · Scorecard blocs B+D · CRE + recommandation",
+    livrable: "Scorecard complétée · Compte-rendu · Recommandation GO/NO GO"
+  },
+  {
+    title: "04 — Entretien Manager",
+    desc: "Évaluation technique par le N+1. Blocs A (compétences) + C (culture). Débriefing avec le manager sous 48h. Panel si score 3,0–3,4 sur la grille de décision.",
+    outils: "Scorecard Excel (onglet Comparatif) · Notion",
+    actions: "Brief manager · Entretien N+1 · Débriefing panel si requis",
+    livrable: "Scorecard manager · Décision collégiale documentée"
+  },
+  {
+    title: "05 — Tests & PAPI",
+    desc: "Évaluation comportementale PAPI si requis par le poste. Tests techniques selon profil (cas pratique, mise en situation). Résultats intégrés dans la scorecard globale.",
+    outils: "PAPI · Cas pratique · ATS Excel",
+    actions: "Envoi tests · Restitution résultats · Consolidation score final",
+    livrable: "Score final consolidé · Recommandation N+2"
+  },
+  {
+    title: "06 — Offre & Onboarding",
+    desc: "Présentation de l'offre par téléphone avant confirmation écrite. Négociation si nécessaire. Suivi jusqu'à la signature. Passation au RH d'intégration. SLA cible : J+15 maximum.",
+    outils: "Calculateur rémunération Excel · Email template offre",
+    actions: "Appel offre verbale · Email confirmation · Suivi signature · Passation onboarding",
+    livrable: "Promesse d'embauche signée · Dossier transmis"
+  }
+];
+
+const blocs = {
+  A: {
+    title: "Bloc A — Compétences Techniques (35%)",
+    desc: "Hard skills métier évalués sur la base du brief poste. Critères liés à la maîtrise des outils, process et expertise sectorielle. Pondération la plus élevée : c'est le socle.",
+    eliminatoires: "Critère 1 (ADV/O2C) · Critère 4 (Recouvrement)",
+    echelle: "1 = Insuffisant · 2 = Partiel · 3 = Maîtrisé · 4 = Expert"
+  },
+  B: {
+    title: "Bloc B — Soft Skills (25%)",
+    desc: "Capacité d'adaptation, communication, gestion du stress, organisation. Évalué par le RH en entretien structuré et confirmé par le manager.",
+    eliminatoires: "Critère 6 (Rigueur)",
+    echelle: "1 = Insuffisant · 2 = Partiel · 3 = Maîtrisé · 4 = Expert"
+  },
+  C: {
+    title: "Bloc C — Culture & Valeurs (20%)",
+    desc: "Adéquation avec les valeurs de l'entreprise, posture professionnelle, rapport à l'équipe et au collectif. Évalué principalement par le manager N+1.",
+    eliminatoires: "Critère 12 (Intégrité)",
+    echelle: "1 = Inadéquat · 2 = Partiel · 3 = Bon fit · 4 = Fit fort"
+  },
+  D: {
+    title: "Bloc D — Motivation & Projet (20%)",
+    desc: "Cohérence du projet professionnel, motivation pour le poste et l'entreprise, vision à moyen terme. Évalué en entretien RH et validé en final.",
+    eliminatoires: "Critère 17 (Motivation poste)",
+    echelle: "1 = Flou · 2 = Partiel · 3 = Cohérent · 4 = Très motivé"
+  }
+};
+
+function showStep(i) {
+  document.querySelectorAll('.pipeline-step').forEach((s,j) => s.classList.toggle('active', j===i));
+  const s = steps[i];
+  document.getElementById('step-content').innerHTML = `
+    <h3>${s.title}</h3>
+    <p style="color:var(--texte-muted); font-size:13px;">${s.desc}</p>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="di-label">Outils</div><div class="di-val">${s.outils}</div></div>
+      <div class="detail-item"><div class="di-label">Actions clés</div><div class="di-val">${s.actions}</div></div>
+      <div class="detail-item"><div class="di-label">Livrable</div><div class="di-val">${s.livrable}</div></div>
+    </div>`;
+  const p = document.getElementById('step-detail');
+  p.classList.remove('visible');
+  setTimeout(() => p.classList.add('visible'), 10);
+}
+
+function showBloc(l) {
+  ['A','B','C','D'].forEach(x => document.getElementById('bloc-'+x).classList.toggle('active', x===l));
+  const b = blocs[l];
+  document.getElementById('bloc-content').innerHTML = `
+    <h3>${b.title}</h3>
+    <p style="color:var(--texte-muted); font-size:13px; margin-bottom:1.2rem;">${b.desc}</p>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="di-label">Critères éliminatoires</div><div class="di-val">${b.eliminatoires}</div></div>
+      <div class="detail-item"><div class="di-label">Échelle de notation</div><div class="di-val">${b.echelle}</div></div>
+      <div class="detail-item"><div class="di-label">Règle</div><div class="di-val">Score &lt; 2 sur un critère éliminatoire = non-sélection automatique</div></div>
+    </div>`;
+  const p = document.getElementById('bloc-detail');
+  p.classList.remove('visible');
+  setTimeout(() => p.classList.add('visible'), 10);
+}
+
+function showComm(i) {
+  document.querySelectorAll('.comm-tab').forEach((t,j) => t.classList.toggle('active', j===i));
+  document.querySelectorAll('.comm-panel').forEach((p,j) => p.classList.toggle('active', j===i));
+}
+
+// Init
+showStep(0);
+showBloc('A');
+</script>
+</body>
+</html>
