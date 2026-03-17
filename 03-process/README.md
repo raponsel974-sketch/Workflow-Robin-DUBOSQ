@@ -9,7 +9,7 @@ Pipeline de recrutement et configuration ATS utilisés chez Fnac Darty (Talentso
 | Étape | Description | Owner | SLA cible |
 |---|---|---|---|
 | Identifié | Profil sourcé, pré-qualifié téléphone | RH | J+2 |
-| Envoyé au manager | Validé RH, transmis N+1 | RH | J+3 |
+| Entretien RH (Moi) | Validé RH, transmis N+1 | RH | J+3 |
 | Entretien Manager | Entretien N+1 planifié / réalisé | Manager | J+7 |
 | Tests Techniques | Cas pratique ou évaluation métier | Manager | J+10 |
 | Tests PAPI | Évaluation comportementale si requis | RH | J+12 |
